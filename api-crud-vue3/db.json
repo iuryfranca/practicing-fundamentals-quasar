@@ -1,9 +1,6 @@
 {
-    "posts": [
-      { "id": 1, "title": "json-server", "author": "typicode" }
-    ],
-    "comments": [
-      { "id": 1, "body": "some comment", "postId": 1 }
-    ],
-    "profile": { "name": "typicode" }
-  }
+  "posts": [
+    { "id": 1, "title": "Option 1", "author": "Eu", "content": "Algo para descrever aqui." },
+    { "id": 2, "title": "Option 2", "author": "Eu tbm", "content": "Algo para descrever aqui." }
+  ]
+}
