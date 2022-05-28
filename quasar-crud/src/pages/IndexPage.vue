@@ -13,13 +13,20 @@
         <q-btn color="primary" label="Novo" :to="{ name: 'formPosts' }" />
       </template>
       <template v-slot:body-cell-actions="props">
-        <q-td :props="props">
+        <q-td :props="props" class="q-gutter-sm">
           <q-btn
             size="md"
             icon="delete"
             color="negative"
             dense
             @click="handleDelete(props.row.id)"
+          />
+          <q-btn
+            size="md"
+            icon="edit"
+            color="primary"
+            dense
+            @click="handleEdit(props.row.id)"
           />
         </q-td>
       </template>
@@ -29,15 +36,16 @@
 
 <script>
 import { defineComponent, onMounted, ref } from "vue";
-import usePost from "src/services/posts";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
+import usePost from "src/services/posts";
 
 export default defineComponent({
   name: "IndexPage",
   setup() {
     const posts = ref([]);
     const { list, remove } = usePost();
-    const $q = useQuasar();
+
     const columns = [
       { name: "id", align: "left", field: "id", label: "Id", sortable: true },
       {
@@ -56,12 +64,15 @@ export default defineComponent({
       },
       {
         name: "actions",
-        align: "center",
+        align: "right",
         field: "actions",
         label: "Ações",
         sortable: true,
       },
     ];
+
+    const $q = useQuasar();
+    const router = useRouter();
 
     onMounted(() => {
       getPosts();
@@ -101,10 +112,15 @@ export default defineComponent({
       }
     };
 
+    const handleEdit = async (id) => {
+      router.push({ name: "formPosts", params: { id } });
+    };
+
     return {
       posts,
       columns,
       handleDelete,
+      handleEdit,
     };
   },
 });

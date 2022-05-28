@@ -5,7 +5,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', name: 'home', component: () => import('pages/IndexPage.vue') },
-      { path: 'form-post', name: 'formPosts', component: () => import('pages/FormPosts.vue') }
+      { path: 'form-post/:id?', name: 'formPosts', component: () => import('pages/FormPosts.vue') }
     ]
   },
 

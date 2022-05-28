@@ -45,17 +45,18 @@
   </q-page>
 </template>
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { useQuasar } from "quasar";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import usePost from "src/services/posts";
 
 export default defineComponent({
   name: "FormPosts",
   setup() {
-    const { post } = usePost();
+    const { post, getById, update } = usePost();
     const $q = useQuasar();
     const router = useRouter();
+    const route = useRoute();
 
     const form = ref({
       title: "",
@@ -63,14 +64,42 @@ export default defineComponent({
       author: "",
     });
 
+    onMounted(async () => {
+      if (route.params.id) {
+        getPostById(route.params.id);
+      }
+    });
+
+    const getPostById = async (id) => {
+      try {
+        const response = await getById(id);
+        form.value = response;
+      } catch (error) {
+        $q.notify({
+          color: "negative",
+          textColor: "white",
+          message: error.response.data.message,
+        });
+      }
+    };
+
     const onSubmit = async () => {
       try {
-        await post(form.value);
-        $q.notify({
-          message: "Post adicionado com sucesso!",
-          color: "positive",
-          icon: "done",
-        });
+        if (form.value.id) {
+          await update(form.value);
+          $q.notify({
+            message: "Post atualizado com sucesso!",
+            color: "positive",
+            icon: "done",
+          });
+        } else {
+          await post(form.value);
+          $q.notify({
+            message: "Post adicionado com sucesso!",
+            color: "positive",
+            icon: "done",
+          });
+        }
         router.push({ name: "home" });
       } catch (error) {
         console.log(error);
